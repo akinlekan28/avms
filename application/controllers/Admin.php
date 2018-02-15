@@ -4,10 +4,10 @@ class Admin extends MY_Controller{
 
    public function __construct(){
         parent::__construct();
-        $this->load->model('users');
+        $this->load->model(array('users', 'tokens'));
     }
-
-   public function index()
+   
+    public function index()
     {
         $data = [];
         $message = $this->session->flashdata('message');
@@ -86,6 +86,115 @@ class Admin extends MY_Controller{
         $this->session->sess_destroy();
         redirect('admin');
     }
+
+    public function resetpassword(){
+
+        $data = [];
+        if($this->input->post() && $this->form_validation->run('forgot')){
+            $post = $this->input->post();
+
+            $clean = $this->security->xss_clean($post);
+            $email = $clean['email'];
+            
+            
+            $sender = "reset@avmsfunaab.com.ng";
+            $subject = "Password Reset Link";
+
+            $emailCheck = $this->users->getUser($email);
+        
+            if($emailCheck){
+                $token = $this->users->insertToken($email, $emailCheck->user_id);
+                $qstring = $token;
+                $url = site_url('admin/confirm_password/'.$qstring);
+                $link = '<a href="' . $url . '">' . $url . '</a>';
+                $name = $emailCheck->lastname . " " . $emailCheck->firstname;
+                $data = array(
+                    'link' => $link,
+                    'name' => $name
+                );
+                $this->_sendEmail($sender , $email , $subject , $data);
+                
+                $data['response'] = TRUE;
+                $data['message'] = "Password Reset Link Sent to your Mail";
+            } else {
+                $data['response'] = FALSE;
+                $data['message'] = "Cannot Verify Email.";
+            }
+        }
+        $this->load->view('admin/auth/forgot', $data);
+    }
+
+
+  public function confirm_password()
+  {       
+          $token = $this->uri->segment(3);
+          $token_user = $this->users->getByToken($token);
+
+          if(!$token_user  || !$token_user->token )
+          {
+              $data['response'] = false;
+              $data['message'] = "Token Not Valid";
+
+              
+          }
+          else{
+            if($this->input->post() && $this->form_validation->run('confirm'));
+            {
+                $post = $this->input->post();
+                
+                $createPassword = md5($post['password']);
+                
+                $succes = $this->users->update_password($createPassword, $token_user->user_id);
+
+                if($succes)
+                {
+                     $data['response'] = true;
+                     $data['message'] = "Password Successfully Changed! you can now Login";
+
+                }
+                else{
+                     $data['response'] = false;
+                     $data['message'] = "Error Updating your Password";
+                     $this->load->view("admin/auth/resetpassword", $data);
+                    return;
+                }
+                
+                $this->session->set_flashdata('message' , $data);
+                redirect('admin');
+            }
+          }
+                
+          $this->load->view('admin/auth/changepassword' , $data);
+  }
+ 
+   protected function _sendEmail($sender , $email , $subject , $data)
+   {
+
+     $ci = & get_instance();
+     $ci->load->library('email');
+
+
+    $ci->email->set_newline("\r\n");
+    $ci->email->from($sender , 'Avms Funaab Password Reset');
+    $ci->email->to($email);
+    $ci->email->subject($subject);
+
+    $view = $this->load->view('admin/auth/email', $data , TRUE);
+
+    $ci->email->message($view);
+
+    if($ci->email->send())
+    {
+          $data['response'] = true;
+          $data['message'] =  "Email successfully Sent";
+    }
+    else
+    {
+         $data['response'] = false;
+         $data['message'] = "Error sending Email.";
+    }
+
+   }
 
 }
 

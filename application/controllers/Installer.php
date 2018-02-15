@@ -32,6 +32,12 @@ class Installer extends MY_Controller
         $this->load->dbforge();
 
 
+        //Add Category Table
+        $this->load->model('Category');
+        $this->dbforge->add_field($this->Category->columns);
+        $this->dbforge->add_key('category_id', TRUE);
+        $this->dbforge->create_table('category', TRUE);
+
         //Add Due Table
         $this->load->model('Due');
         $this->dbforge->add_field($this->Due->columns);
@@ -80,7 +86,7 @@ class Installer extends MY_Controller
 
         $privileges = array(
             array('privilege_name' => 'Admin'  ,'privilege_info' => 'Full Access and Control, Can Edit and Delete account'),
-            array('privilege_name' => 'Staff' ,'privilege_info' => 'Can Only View and Post Complaint')
+            array('privilege_name' => 'Staff' ,'privilege_info' => 'Can Only View and Post')
         );
 
         foreach($privileges as $p)

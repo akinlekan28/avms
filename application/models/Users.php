@@ -137,4 +137,10 @@ class Users extends MY_Model
             return false;
         }
     }
+
+    public function getUser($email){
+        $this->db->where('email', $email);
+        $result = $this->db->get('users');
+        return $result->row();
+    }
 }

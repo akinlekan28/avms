@@ -14,6 +14,8 @@ class Exco extends MY_Model{
 
   public $nick;
 
+  public $classSession;
+
   public $pic;
 
   public $is_delete;
@@ -58,6 +60,12 @@ class Exco extends MY_Model{
         'nick' =>array(
             'type' => 'VARCHAR',
             'constraint'=> 250,
+        ),
+
+        'classSession' =>array(
+            'type' => 'VARCHAR',
+            'constraint'=> 250,
+            'null' => FALSE,
         ),
 
         'pic' =>array(

@@ -99,6 +99,12 @@ $config = array(
             'field' => 'phone',
             'label' => 'Phone Number',
             'rules' => 'required'
+        ),
+
+        array(
+            'field' => 'classSession',
+            'label' => 'Session',
+            'rules' => 'required'
          )
     ),
 
@@ -107,13 +113,7 @@ $config = array(
             'field' => 'category_name',
             'label' => 'Category Name',
             'rules' => 'required'
-         ),
-
-        array(
-            'field' => 'category_description',
-            'label' => 'Category Description',
-            'rules' => 'required'
-         ),
+         )
     ),
 
     'blogpost' => array(
@@ -145,6 +145,25 @@ $config = array(
         ),
 
     ),
+
+    'forgot' => array(
+        array(
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'required'
+        )
+
+    ),
+
+        
+    'confirm' => array(
+        array(
+            'field' => 'password',
+            'label' => 'Password',
+            'rules' => 'required'
+        )
+
+    )
 
 );
 

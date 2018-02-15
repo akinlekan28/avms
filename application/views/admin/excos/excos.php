@@ -58,6 +58,11 @@
             </div>
 
             <div class="form-group">
+               <input type="text" class="form-control" placeholder="Session" name="classSession">
+               <p><?php echo form_error('classSession')?></p>
+            </div>
+
+            <div class="form-group">
                <input type="file" class="form-control" placeholder="Picture" name="pic">
             </div>
 
@@ -87,6 +92,7 @@
                 <p><strong>Level: <?php echo $exco->level?></strong></p>
                 <p><strong>Nickname: <?php echo $exco->nick?></strong></p>
                 <p><strong>Phone: <?php echo $exco->phone?></strong></p>
+                <p><strong>Session: <?php echo $exco->classSession?></strong></p>
               </div>
               <div class="panel-footer text-center">
 

@@ -7,7 +7,8 @@
           'users',
           'material',
           'due',
-          'exco'
+          'exco',
+          'category'
         ));
         $this->_secure();
     }
@@ -214,6 +215,7 @@
                     'phone' => $clean['phone'],
                     'nick' => $clean['nick'],
                     'pic' => 'uploads/excos/' . $this->upload->data('file_name'),
+                    'classSession' => $clean['classSession']
                 );
 
                 $success = $this->exco->insert($values);
@@ -248,7 +250,8 @@
                 'position' => $clean['position'],
                 'level' => $clean['level'],
                 'phone' => $clean['phone'],
-                'nick' => $clean['nick']
+                'nick' => $clean['nick'],
+                'classSession' => $clean['classSession']
             );
 
             $success = $this->exco->update($values, $exco_id);
@@ -339,8 +342,103 @@
 
     public function categories(){
 
-      $data = [];
+        if($this->input->post() && $this->form_validation->run('addcat')){
+
+            $post = $this->input->post();
+            $clean = $this->security->xss_clean($post);
+
+            $values = array(
+                'category_name' => $clean['category_name'],
+                'category_description' => $clean['category_description'],
+            );
+
+            $success = $this->category->insert($values);
+
+            if($success)
+            {
+                $data['response'] = TRUE;
+                $data['message'] = 'Category Successfully Added';
+            }
+            else
+            {
+                $data['response'] = FALSE;
+                $data['message'] = 'Error Adding Category Details';
+            }
+        }
+
+      $data['categories'] = $this->category->getAll('', array('is_delete' => 0));
       $this->adminview->_output(['admin/blog/categories'], $data);
+    }
+
+    public function editCategory($category_id){
+
+         $category = $this->category->getOne('', array('category_id' => $category_id, 'is_delete' => 0));
+
+        if($this->input->post() && $this->form_validation->run('addcat'))
+        {
+            $post = $this->input->post();
+            $clean = $this->security->xss_clean($post);
+
+            $values = array(
+                'category_name' => $clean['category_name'],
+                'category_description' => $clean['category_description']
+            );
+
+            $success = $this->category->update($values, $category_id);
+
+            if($success)
+            {
+                $data['response'] = TRUE;
+                $data['message'] = 'Category Details Successfully Updated';
+            }
+            else
+            {
+                $data['response'] = FALSE;
+                $data['message'] = 'Error Updating Category Details';
+            }
+        }
+
+        $data['category'] = $category;
+
+        $this->load->view('admin/blog/editcat', $data);
+    }
+
+    public function deleteCategory($category_id){
+
+        $category = $this->category->getOne('', array('category_id' => $category_id, 'is_delete' => 0));
+
+        if(!$category->category_id)
+        {
+            echo json_encode(0);
+        }
+        elseif($category->category_id)
+        {
+            $value = array(
+                'is_delete' => 1
+            );
+
+            $success = $category->update($value , $category_id);
+
+            if($success)
+            {
+                echo json_encode(1);
+            }
+            else
+            {
+                echo json_encode(0);
+
+            }
+        }
+
+    }
+
+    public function addpost(){
+
+    }
+
+    public function viewpost(){
+
+        $this->adminview->_output('blog/viewpost');
     }
 
 

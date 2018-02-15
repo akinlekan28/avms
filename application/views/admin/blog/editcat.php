@@ -23,7 +23,7 @@
     <?php endif?>
 <?php endif?>
 
-<div class="panel panel-headline" style="margin-top:25px">
+<div class="panel panel-headline" style="margin-top:50px">
 				<div class="panel-heading">
 					<h3 class="panel-title text-center">Update</h3>
 				</div>
@@ -31,32 +31,12 @@
           <form method="post">
 
             <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $exco->fullname?>" name="fullname">
-              <p><?php echo form_error('fullname')?></p>
+               <input type="text" class="form-control" value="<?php echo $category->category_name?>"  name="category_name">
+              <p><?php echo form_error('category_name')?></p>
             </div>
 
             <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $exco->position?>" name="position">
-              <p><?php echo form_error('position')?></p>
-            </div>
-
-            <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $exco->level?>" name="level">
-              <p><?php echo form_error('level')?></p>
-            </div>
-
-            <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $exco->phone?>" name="phone">
-              <p><?php echo form_error('phone')?></p>
-            </div>
-
-            <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $exco->nick?>" name="nick">
-            </div>
-
-            <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $exco->classSession?>" name="classSession">
-               <p><?php echo form_error('classSession')?></p>
+               <input type="text" class="form-control" value="<?php echo $category->category_description?>" name="category_description">
             </div>
 
             <div class="text-center">

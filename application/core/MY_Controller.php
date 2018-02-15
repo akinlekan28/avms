@@ -16,7 +16,7 @@ class MY_Controller extends CI_Controller{
     public function __construct() {
         parent::__construct();
         $this->page_id = strtolower($this->uri->rsegment(1)).'_'.strtolower($this->uri->rsegment(2));
-        $this->output->enable_profiler(FALSE);
+        $this->output->enable_profiler(TRUE);
 
     }
     

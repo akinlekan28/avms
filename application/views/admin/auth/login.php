@@ -63,8 +63,8 @@
 								</div>
 								<button type="submit" class="btn btn-primary btn-lg btn-block">LOGIN</button>
 								<div class="bottom">
-									<span class="helper-text"><i class="fa fa-lock"></i> <a href="#">Forgot password?</a></span>
-									<span class="helper-text"><i class="fa fa-user"></i> <a href="<?php echo site_url('admin/signup')?>">Register</a></span>
+									<span class="helper-text"><i class="fa fa-lock text-primary"></i> <a href="<?php echo site_url('admin/resetpassword')?>">Forgot password?</a></span>
+									<span class="helper-text"><i class="fa fa-user text-primary"></i> <a href="<?php echo site_url('admin/signup')?>">Register</a></span>
 								</div>
 							</form>
 						</div>
