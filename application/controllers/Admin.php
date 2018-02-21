@@ -108,11 +108,10 @@ class Admin extends MY_Controller{
                 $url = site_url('admin/confirm_password/'.$qstring);
                 $link = '<a href="' . $url . '">' . $url . '</a>';
                 $name = $emailCheck->lastname . " " . $emailCheck->firstname;
-                $data = array(
-                    'link' => $link,
-                    'name' => $name
-                );
-                $this->_sendEmail($sender , $email , $subject , $data);
+                $message = '';
+                $message .= '<strong>Hello' . ' '. $name . ' ' . '<br>You Requested to reset your password on Avms Funaab web portal</strong><br>';
+                $message .= '<strong>Please click:</strong> ' . $link . '<strong> to Reset</strong>';
+                $this->_sendEmail($sender , $email , $subject , $message);
                 
                 $data['response'] = TRUE;
                 $data['message'] = "Password Reset Link Sent to your Mail";
@@ -144,13 +143,13 @@ class Admin extends MY_Controller{
                 
                 $createPassword = md5($post['password']);
                 
-                $succes = $this->users->update_password($createPassword, $token_user->user_id);
+                $success = $this->users->update_password($createPassword, $token_user->user_id);
 
-                if($succes)
+                if($success)
                 {
                      $data['response'] = true;
                      $data['message'] = "Password Successfully Changed! you can now Login";
-
+                     
                 }
                 else{
                      $data['response'] = false;
@@ -167,7 +166,7 @@ class Admin extends MY_Controller{
           $this->load->view('admin/auth/changepassword' , $data);
   }
  
-   protected function _sendEmail($sender , $email , $subject , $data)
+   protected function _sendEmail($sender , $email , $subject , $body)
    {
 
      $ci = & get_instance();
@@ -179,9 +178,7 @@ class Admin extends MY_Controller{
     $ci->email->to($email);
     $ci->email->subject($subject);
 
-    $view = $this->load->view('admin/auth/email', $data , TRUE);
-
-    $ci->email->message($view);
+    $ci->email->message($body);
 
     if($ci->email->send())
     {

@@ -59,7 +59,7 @@
 			 <div class="sidebar-scroll">
 				<nav>
 	<ul class="nav">
-			<li><a href="<?php echo site_url('dashboard');?>" class=""><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
+			<li><a href="<?php echo site_url('dashboard');?>"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
 						
 			<li>
 				<a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-magic-wand"></i> <span>News</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>

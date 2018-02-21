@@ -8,7 +8,8 @@
           'material',
           'due',
           'exco',
-          'category'
+          'category',
+          'blog'
         ));
         $this->_secure();
     }
@@ -434,11 +435,14 @@
 
     public function addpost(){
 
+        $data['categories'] = $this->category->getAll('', array('is_delete' => 0));
+        $this->adminview->_output(['admin/blog/addpost'], $data);
     }
 
     public function viewpost(){
 
-        $this->adminview->_output('blog/viewpost');
+        $data['blogPosts'] = $this->blog->getAll('', array('is_delete' => 0));
+        $this->adminview->_output(['admin/blog/viewpost'], $data);
     }
 
 

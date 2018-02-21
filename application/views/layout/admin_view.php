@@ -26,6 +26,11 @@
         }
     }
 
+    .sidebar .nav>li>a.active {
+         background-color: #252c35;
+         border-left-color: #00AAFF;
+   }
+
 </style>
 
 <?php
@@ -57,5 +62,15 @@
                 $('#default').modal();
             }
         });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+     var url = window.location;
+     $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+     $('ul.nav a').filter(function() {
+     return this.href == url;
+      }).parent().addClass('active');
     });
 </script>

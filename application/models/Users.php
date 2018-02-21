@@ -140,6 +140,7 @@ class Users extends MY_Model
 
     public function getUser($email){
         $this->db->where('email', $email);
+        $this->db->where('is_delete', 0);
         $result = $this->db->get('users');
         return $result->row();
     }
