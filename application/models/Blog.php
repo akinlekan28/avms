@@ -8,11 +8,15 @@ class Blog extends MY_Model{
 
   public $user_id;
 
+  public $draft_status;
+
   public $category_id;
 
   public $post;
 
   public $date_added;
+
+  public $slug_title;
 
   public $pic;
 
@@ -50,6 +54,12 @@ class Blog extends MY_Model{
             'null' => FALSE,
         ),
 
+        'draft_status' => array(
+            'type' => 'INT',
+            'constraint' => 11,
+            'default' => 0,
+        ),
+
         'post' =>array(
             'type' => 'TEXT',
             'null' => FALSE,
@@ -57,6 +67,12 @@ class Blog extends MY_Model{
 
         'date_added' =>array(
             'type' => 'DATE',
+            'null' => FALSE,
+        ),
+
+        'slug_title' =>array(
+            'type' => 'VARCHAR',
+            'constraint'=> 250,
             'null' => FALSE,
         ),
 
@@ -90,6 +106,30 @@ class Blog extends MY_Model{
             }
         }
   }
+
+  public function getCategory($category_id = NULL){
+        if ($category_id) {
+            $category = $this->category->getOne('', array('is_delete' => 0, 'category_id' => $category_id));
+            if ($category->category_id) {
+                return $category->category_name;
+            } else {
+                return NULL;
+            }
+        } else {
+            $category = $this->category->getOne('', array('is_delete' => 0, 'category_id' => $this->category_id));
+            if ($category->category_id) {
+                return $category->category_name;
+            } else {
+                return NULL;
+            }
+        }
+ }
+
+  public function deletePost($post_id, $fileName){
+     $this->db->where('post_id', $post_id);
+     unlink($fileName);
+     $this->db->delete('blog');
+ }
 
 }
 

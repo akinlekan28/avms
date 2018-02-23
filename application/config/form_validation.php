@@ -118,16 +118,22 @@ $config = array(
 
     'blogpost' => array(
         array(
-            'field' => 'post_title',
+            'field' => 'title',
             'label' => 'Post Title',
             'rules' => 'required'
         ),
 
         array(
-            'field' => 'post_description',
-            'label' => 'Product Description',
+            'field' => 'post',
+            'label' => 'Post Description',
             'rules' => 'required'
         ),
+
+        array(
+            'field' => 'category_id',
+            'label' => 'Post Category',
+            'rules' => 'required'
+        )
 
     ),
 

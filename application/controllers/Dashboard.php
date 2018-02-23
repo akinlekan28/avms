@@ -435,17 +435,218 @@
 
     public function addpost(){
 
+        if($this->input->post('publish') && $this->form_validation->run('blogpost')){
+
+            $config['upload_path'] = './uploads/blog';
+            $config['allowed_types'] = 'jpg|png|gif';
+            $config['overwrite'] = TRUE;
+            $config['max_size']  = 20000;
+            $config['max_width'] = 0;
+            $config['max_height'] = 0;
+            $config['file_name'] = $this->input->post('title');
+
+            $this->load->library('upload', $config);
+
+            if(!$this->upload->do_upload('pic'))
+            {
+
+                $data['response'] = FALSE;
+                $data['message'] = $this->upload->display_errors();
+            }
+            else{
+
+                $value = array(
+                    'title' => $this->input->post('title'),
+                    'category_id' => $this->input->post('category_id'),
+                    'post' => $this->input->post('post'),
+                    'pic' => 'uploads/blog/'.$this->upload->data('file_name'),
+                    'date_added' => date("Y-m-d H:m:s"),
+                    'slug_title' => slug($this->input->post('title')),
+                    'user_id' => $this->current_user->user_id,
+                );
+
+                $success = $this->blog->insert($value);
+
+                if($success){
+                    $data['response'] = TRUE;
+                    $data['message'] = "Blog Post successfully Published";
+                }
+                else{
+                    $data['response'] = FALSE;
+                    $data['message'] = "Error Publishing Blog Post";
+                }
+
+            }
+        } else if($this->input->post('draft') && $this->form_validation->run('blogpost')){
+
+                    $config['upload_path'] = './uploads/blog';
+                    $config['allowed_types'] = 'jpg|png|gif';
+                    $config['overwrite'] = TRUE;
+                    $config['max_size']  = 20000;
+                    $config['max_width'] = 0;
+                    $config['max_height'] = 0;
+                    $config['file_name'] = $this->input->post('title');
+
+                    $this->load->library('upload', $config);
+
+                    if(!$this->upload->do_upload('pic')){
+                        
+                        $data['response'] = FALSE;
+                        $data['message'] = $this->upload->display_errors();
+                    }  else {
+                            $value = array(
+                                'title' => $this->input->post('title'),
+                                'category_id' => $this->input->post('category_id'),
+                                'post' => $this->input->post('post'),
+                                'pic' => 'uploads/blog/'.$this->upload->data('file_name'),
+                                'date_added' => date("Y-m-d H:m:s"),
+                                'slug_title' => slug($this->input->post('title')),
+                                'user_id' => $this->current_user->user_id,
+                                'draft_status' => 1
+                            );
+
+                            $success = $this->blog->insert($value);
+
+                    if($success){
+                        $data['response'] = TRUE;
+                        $data['message'] = "Blog Post successfully Published";
+                    }
+                    else{
+                        $data['response'] = FALSE;
+                        $data['message'] = "Error Publishing Blog Post";
+                    }
+            }
+        }
+
         $data['categories'] = $this->category->getAll('', array('is_delete' => 0));
         $this->adminview->_output(['admin/blog/addpost'], $data);
     }
 
     public function viewpost(){
 
-        $data['blogPosts'] = $this->blog->getAll('', array('is_delete' => 0));
+        $data['blogPosts'] = $this->blog->getAll('', array('is_delete' => 0, 'draft_status' => 0), '', '', '', '', 'date_added');
         $this->adminview->_output(['admin/blog/viewpost'], $data);
     }
 
+    public function editPost($post_id){
 
-  }
+        $blogpost = $this->blog->getOne('', array('post_id' => $post_id, 'is_delete' => 0));
+        $blogpostCategoryId = $blogpost->category_id;
+
+        if(!$blogpost->post_id){
+            $data['title'] = "No Record Found";
+            $data['message'] = "Content Does not Exist or it has been Deleted!";
+            $this->load->view('error/404' , $data);
+
+            return;
+        }
+         else if($this->input->post() && $this->form_validation->run('blogpost')){
+                $post = $this->input->post();
+                $clean = $this->security->xss_clean($post);
+
+                $config['upload_path'] = './uploads/blog';
+                $config['allowed_types'] = 'jpg|png|gif';
+                $config['overwrite'] = TRUE;
+                $config['max_size']  = 20000;
+                $config['max_width'] = 0;
+                $config['max_height'] = 0;
+                $config['file_name'] = $clean['title'];
+
+                $this->load->library('upload', $config);
+
+                if(!$this->upload->do_upload('pic'))
+                {
+
+                    $data['response'] = FALSE;
+                    $data['message'] = $this->upload->display_errors();
+                }
+                else{
+
+                    $value = array(
+                        'title' => $clean['title'],
+                        'category_id' => $clean['category_id'],
+                        'post' => $clean['post'],
+                        'pic' => 'uploads/blog/'.$this->upload->data('file_name'),
+                        'slug_title' => slug($clean['title']),
+                        'user_id' => $this->current_user->user_id,
+                    );
+
+                    $success = $blogpost->update($value, $post_id);
+
+                    if($success){
+                        $data['response'] = TRUE;
+                        $data['message'] = "Blog Post successfully Published";
+                    }
+                    else{
+                        $data['response'] = FALSE;
+                        $data['message'] = "Error Publishing Blog Post";
+                    }
+
+            }
+    }
+    $data['categories'] = $this->category->getAll('', array('is_delete' => 0, 'category_id !=' => $blogpostCategoryId), '', '', 'category_id');
+    $data['post'] = $blogpost;
+    $this->load->view('admin/blog/editpost', $data);
+    }
+
+    public function deletePost($post_id){
+
+        $post = $this->blog->getOne('', array('post_id' => $post_id, 'is_delete' => 0));
+
+        if(!$post->post_id)
+        {
+            echo json_encode(0);
+        }
+        elseif($post->post_id)
+        {
+            $fileName = $post->pic;
+            $success = $this->blog->deletePost($post_id, $fileName);
+
+            if($success)
+            {
+                echo json_encode(1);
+            }
+            else
+            {
+                echo json_encode(0);
+            }
+        }
+    }
+
+    public function draftpost(){
+
+        $data['drafts'] = $this->blog->getAll('', array('is_delete' => 0, 'draft_status' => 1), '', '', '', '', 'date_added');
+        $this->adminview->_output(['admin/blog/drafts'], $data);
+    }
+
+    public function publishPost($post_id){
+       
+        $post = $this->blog->getOne('', array('post_id' => $post_id, 'is_delete' => 0, 'draft_status' => 1));
+
+        if(!$post->post_id)
+        {
+            echo json_encode(0);
+        }
+        elseif($post->post_id)
+        {
+            $value = array(
+                'draft_status' => 0
+            );
+
+            $success = $post->update($value , $post_id);
+
+            if($success)
+            {
+                echo json_encode(1);
+            }
+            else
+            {
+                echo json_encode(0);
+
+            }
+        }
+    }
+
+}
 
 ?>

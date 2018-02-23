@@ -28,7 +28,7 @@
 			<!-- PANEL HEADLINE -->
 			<div class="panel panel-headline">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">View Blog posts</h3>
+					<h3 class="panel-title text-center">Drafts</h3>
 				</div>
 				<div class="panel-body">
 
@@ -46,17 +46,19 @@
 						<tbody>
               <?php
                 $sn = 1;
-                foreach($blogPosts as $blogPost):?>
+                foreach($drafts as $draft):?>
               <tr>
                 <td><?php echo $sn?></td>
-                <td><img src="<?php echo base_url("$blogPost->pic")?>" style="height:100px; width:100px;"></td>
-                <td><?php echo $blogPost->title?></td>
-                <td><?php echo $blogPost->getUser()?></td>
-                <td><?php echo $blogPost->date_added?></td>
+                <td><img src="<?php echo base_url("$draft->pic")?>" style="height:100px; width:100px;"></td>
+                <td><?php echo $draft->title?></td>
+                <td><?php echo $draft->getUser()?></td>
+                <td><?php echo $draft->date_added?></td>
                 <td>
-                  <a href="#" data="<?php echo $blogPost->post_id; ?>" class="delete"><i class="fa fa-trash" style="color: #EB5E28;"></i>
+                  <a href="#" data="<?php echo $draft->post_id; ?>" class="delete"><i class="fa fa-trash" style="color: #EB5E28;"></i>
                   </a> &nbsp;
-                  <a href="<?php echo site_url("dashboard/editPost/{$blogPost->post_id}")?>" class="btn-form-modal" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" data-target="#default" ><i class="fa fa-edit text-success"></i></a>
+                  <a href="<?php echo site_url("dashboard/editPost/{$draft->post_id}")?>" class="btn-form-modal" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="Edit" data-target="#default" ><i class="fa fa-edit text-success"></i></a> &nbsp;
+                  <a href="#" data-publish="<?php echo $draft->post_id; ?>" class="publish"><span class="badge"><small>Publish</small></span></i>
+                  </a>
               </td>
               </tr>
               <?php $sn ++;
@@ -77,6 +79,41 @@
         const post_id = $(this).attr('data');
         delete_post(post_id);
     });
+
+    $('.publish').click(function (){
+        const post = $(this).attr('data-publish');
+        publish_post(post);
+    });
+
+    function publish_post(post){
+        swal({
+                title: "Are you sure?",
+                text: "Post will be published and live!",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Publish It!",
+                cancelButtonText: "No, Cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function() {
+                var link = 'publishPost/'+post;
+                $.ajax({
+                    url: link,
+                    type: 'DELETE',
+                })
+                    .done(function(data){
+                            swal("Deleted" , "Blog Post Published" , "success")
+                        },
+                        function(){
+                            location.reload();
+                        })
+                    .error(function(data){
+                        swal("Oops" , "Error publishing Blog Post")
+                    });
+            });
+    }
 
     function delete_post(post_id){
         swal({

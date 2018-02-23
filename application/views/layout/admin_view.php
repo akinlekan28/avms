@@ -31,6 +31,18 @@
          border-left-color: #00AAFF;
    }
 
+  .sweet-alert button.cancel{
+    background-color: #e4cb10 !important;
+  }
+
+   .sweet-alert button.cancel:hover {
+    background-color: #e4cb10 !important;
+  }
+
+  .sweet-alert button.confirm{
+    background-color: #00AAFF !important;
+  }
+
 </style>
 
 <?php

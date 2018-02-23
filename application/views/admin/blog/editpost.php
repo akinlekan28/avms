@@ -1,3 +1,4 @@
+<?php $this->load->view('partials/mod_header'); ?>
 <?php if(isset($response)):?>
     <?php if($response == TRUE):?>
         <script type="text/javascript">
@@ -11,7 +12,6 @@
         </script>
     <?php elseif($response == FALSE):?>
         <script>
-            var message = <?php echo json_encode($message)?>;
             $(document).ready(function(){
                 swal({
                     title: "Success",
@@ -26,29 +26,27 @@
 <link href="<?php echo base_url()?>assetadmin/summernote/summernote.css" rel="stylesheet" />
 <link href="<?php echo base_url()?>assetadmin/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 
-<div class="row">
-		<div class="col-md-12">
-			<!-- PANEL HEADLINE -->
-			<div class="panel panel-headline">
+<div class="panel panel-headline" style="margin-top:50px">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">Add Post</h3>
+					<h3 class="panel-title text-center">Update Post</h3>
 				</div>
 				<div class="panel-body">
           <form method="post" enctype="multipart/form-data">
+
             <div class="form-group">
             <p><?php echo form_error('title')?></p>
-               <input type="text" class="form-control" placeholder="Title" name="title">
+               <input type="text" class="form-control" name="title" value="<?php echo $post->title?>">
             </div>
-            
-             <div class="form-group">
+
+            <div class="form-group">
              <p><?php echo form_error('post')?></p>
-               <textarea class="summernote" name="post"></textarea>
+               <textarea class="summernote" name="post"><?php echo $post->post ?></textarea>
              </div>
 
              <div class="form-group">
              <p><?php echo form_error('category_id')?></p>
                <Select name="category_id" class="form-control">
-                <option value="">Select Category</option>
+                <option value="<?php echo $post->category_id?>"><?php echo $post->getCategory()?></option>
                   <?php foreach ($categories as $category):?>
                   <option value="<?php echo $category->category_id?>"><?php echo $category->category_name?></option>
                 <?php endforeach;?>
@@ -60,19 +58,14 @@
             </div>
 
             <div class="text-center">
-              <input type="submit" value="Publish" class="btn btn-primary" name="publish">
-               <input type="submit" value="Save Draft" class="btn btn-warning" name="draft">
+              <input type="submit" value="Update" class="btn btn-primary" name="update">
             </div>
-
           </form>
 				</div>
-			</div>
-			<!-- END PANEL HEADLINE -->
-    </div>
-</div>    
+      </div>
 
 <script src="<?php echo base_url()?>assetadmin/summernote/summernote.min.js"></script>
-<script src="<?php echo base_url()?>assetadmin/select2/js/select2.min.js" type="text/javascript"></script>
+<script src="<?php echo base_url()?>assetadmin/select2/js/select2.min.js" type="text/javascript"></script>     
 
 <script>
 
@@ -92,3 +85,5 @@
         });
      });
 </script>
+
+<?php $this->load->view('partials/mod_footer'); ?>
