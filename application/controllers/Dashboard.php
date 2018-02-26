@@ -9,7 +9,9 @@
           'due',
           'exco',
           'category',
-          'blog'
+          'blog',
+          'comment',
+          'news'
         ));
         $this->_secure();
     }
@@ -21,7 +23,51 @@
 
     public function addnews(){
 
-       $this->adminview->_output('admin/news/add');
+        $data = [];
+       if($this->input->post() && $this->form_validation->run('news')){
+           $post = $this->input->post();
+
+            $config['upload_path'] = './uploads/news';
+            $config['allowed_types'] = 'jpg|png|gif';
+            $config['overwrite'] = TRUE;
+            $config['max_size']  = 20000;
+            $config['max_width'] = 0;
+            $config['max_height'] = 0;
+            $config['file_name'] = $this->input->post('title');
+
+            $this->load->library('upload', $config);
+
+            if(!$this->upload->do_upload('pic'))
+            {
+
+                $data['response'] = FALSE;
+                $data['message'] = $this->upload->display_errors();
+            }
+            else{
+
+                $value = array(
+                    'title' => $this->input->post('title'),
+                    'news_post' => $this->input->post('news_post'),
+                    'pic' => 'uploads/news/'.$this->upload->data('file_name'),
+                    'date_added' => date("Y-m-d H:m:s"),
+                    'slug_title' => slug($this->input->post('title')),
+                    'user_id' => $this->current_user->user_id,
+                );
+
+                $success = $this->news->insert($value);
+
+                if($success){
+                    $data['response'] = TRUE;
+                    $data['message'] = "News successfully Published";
+                }
+                else{
+                    $data['response'] = FALSE;
+                    $data['message'] = "Error Publishing News";
+                }
+
+            }
+       }
+       $this->adminview->_output(['admin/news/add'], $data);
     }
 
     public function materials(){
@@ -634,6 +680,39 @@
             );
 
             $success = $post->update($value , $post_id);
+
+            if($success)
+            {
+                echo json_encode(1);
+            }
+            else
+            {
+                echo json_encode(0);
+
+            }
+        }
+    }
+
+    public function comments(){
+        $data['comments'] = $this->comment->getAll('', array('is_delete' => 0), '', '', '', '', 'comment_id');
+        $this->adminview->_output(['admin/blog/comments'], $data);
+    }
+
+    public function deleteComment($comment_id){
+        
+        $comment = $this->comment->getOne('', array('comment_id' => $comment_id, 'is_delete' => 0));
+
+        if(!$comment->comment_id)
+        {
+            echo json_encode(0);
+        }
+        elseif($comment->comment_id)
+        {
+            $value = array(
+                'is_delete' => 1
+            );
+
+            $success = $comment->update($value , $comment_id);
 
             if($success)
             {

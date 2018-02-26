@@ -10,14 +10,23 @@
 				<div class="panel-body">
           <form method="post">
             <div class="form-group">
+            <p><?php echo form_error('title')?></p>
                <input type="text" class="form-control" placeholder="Title" name="title">
-              <p><?php echo form_error('title')?></p>
             </div>
             
              <div class="form-group">
-               <textarea class="summernote" name="post_description" name="news"></textarea>
-                <p><?php echo form_error('news')?></p>
+              <p><?php echo form_error('news_post')?></p>
+               <textarea class="summernote" name="news_post"></textarea>
              </div>
+
+             <div class="form-group">
+               <input type="file" class="form-control" placeholder="Cover Photo" name="pic">
+            </div>
+
+            <div class="text-center">
+              <input type="submit" value="Publish" class="btn btn-primary" name="Post">
+            </div>
+
           </form>
 				</div>
 			</div>

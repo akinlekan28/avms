@@ -136,6 +136,21 @@ $config = array(
         )
 
     ),
+    
+    'news' => array(
+        array(
+            'field' => 'title',
+            'label' => 'News Title',
+            'rules' => 'required'
+        ),
+
+        array(
+            'field' => 'news_post',
+            'label' => 'News Description',
+            'rules' => 'required'
+        )
+
+    ),
 
     'access' => array(
         array(

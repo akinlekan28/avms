@@ -31,7 +31,7 @@ class Installer extends MY_Controller
     {
         $this->load->dbforge();
 
-        //Add Category Table
+        //Add Blog Table
         $this->load->model('Blog');
         $this->dbforge->add_field($this->Blog->columns);
         $this->dbforge->add_key('post_id', TRUE);
@@ -42,6 +42,12 @@ class Installer extends MY_Controller
         $this->dbforge->add_field($this->Category->columns);
         $this->dbforge->add_key('category_id', TRUE);
         $this->dbforge->create_table('category', TRUE);
+
+        //Add Comment Table
+        $this->load->model('Comment');
+        $this->dbforge->add_field($this->Comment->columns);
+        $this->dbforge->add_key('comment_id', TRUE);
+        $this->dbforge->create_table('comment', TRUE);
 
         //Add Due Table
         $this->load->model('Due');
@@ -54,6 +60,12 @@ class Installer extends MY_Controller
         $this->dbforge->add_field($this->Exco->columns);
         $this->dbforge->add_key('exco_id', TRUE);
         $this->dbforge->create_table('exco', TRUE);
+
+        //Add News Table
+        $this->load->model('News');
+        $this->dbforge->add_field($this->News->columns);
+        $this->dbforge->add_key('news_id', TRUE);
+        $this->dbforge->create_table('news', TRUE);
 
         //Add Material Table
         $this->load->model('Material');

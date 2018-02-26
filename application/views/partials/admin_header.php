@@ -79,6 +79,7 @@
 							<li><a href="<?php echo site_url('dashboard/addpost');?>" class="">Add Post</a></li>
 							<li><a href="<?php echo site_url('dashboard/viewpost');?>" class="">View Posts</a></li>
 							<li><a href="<?php echo site_url('dashboard/draftpost');?>" class="">Drafts</a></li>
+							<li><a href="<?php echo site_url('dashboard/comments');?>" class="">Comments</a></li>
 					</ul>
 				</div>
 			</li>
