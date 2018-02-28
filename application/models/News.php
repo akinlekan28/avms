@@ -92,11 +92,16 @@
         }
   }
 
-   public function deletePost($news_id, $fileName){
+   public function deleteNews($news_id, $fileName){
      $this->db->where('news_id', $news_id);
      unlink($fileName);
      $this->db->delete('news');
  }
+
+  public function removeImage($news_id, $fileName){
+    $this->db->where('news_id', $news_id);
+    unlink($fileName);
+  }
 
 }
 

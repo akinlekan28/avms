@@ -25,7 +25,6 @@
 
         $data = [];
        if($this->input->post() && $this->form_validation->run('news')){
-           $post = $this->input->post();
 
             $config['upload_path'] = './uploads/news';
             $config['allowed_types'] = 'jpg|png|gif';
@@ -68,6 +67,96 @@
             }
        }
        $this->adminview->_output(['admin/news/add'], $data);
+    }
+
+    public function viewnews(){
+
+        $data['newss'] = $this->news->getAll('', array('is_delete' => 0), '', '', '', '', 'news_id');
+        $this->adminview->_output(['admin/blog/viewnews'], $data);
+    }
+
+    public function editnews($news_id){
+
+        $news = $this->news->getOne('', array('news_id' => $news_id, 'is_delete' => 0));
+
+        if(!$news->news_id){
+            $data['title'] = "No Record Found";
+            $data['message'] = "Content Does not Exist or it has been Deleted!";
+            $this->load->view('error/404' , $data);
+
+            return;
+        }
+
+        else if($this->input->post() && $this->form_validation->run('news')){
+
+                $config['upload_path'] = './uploads/news';
+                $config['allowed_types'] = 'jpg|png|gif';
+                $config['overwrite'] = TRUE;
+                $config['max_size']  = 20000;
+                $config['max_width'] = 0;
+                $config['max_height'] = 0;
+                $config['file_name'] = $this->input->post('title');
+
+            $this->load->library('upload', $config);
+
+            if(!$this->upload->do_upload('pic'))
+            {
+
+                $data['response'] = FALSE;
+                $data['message'] = $this->upload->display_errors();
+            }
+            else{
+
+                $value = array(
+                    'title' => $this->input->post('title'),
+                    'news_post' => $this->input->post('news_post'),
+                    'pic' => 'uploads/news/'.$this->upload->data('file_name'),
+                    'date_added' => date("Y-m-d H:m:s"),
+                    'slug_title' => slug($this->input->post('title'))
+                );
+
+                    $removeImage = $this->news->removeImage($news_id, $news->pic);
+
+                    $success = $news->update($value, $news_id);
+
+                if($success){
+                    $data['response'] = TRUE;
+                    $data['message'] = "News successfully Edited and Published";
+                }
+                else{
+                    $data['response'] = FALSE;
+                    $data['message'] = "Error Editing and Publishing News";
+                }
+
+            }
+        }
+        
+        $data['news'] = $news;
+        $this->load->view('admin/blog/editnews', $data);
+    }
+
+    public function deletenews($news_id){
+        $news = $this->news->getOne('', array('news_id' => $news_id, 'is_delete' => 0));
+
+        if(!$news->news_id)
+        {
+            echo json_encode(0);
+        }
+        elseif($news->news_id)
+        {
+            $fileName = $news->pic;
+            $success = $this->news->deleteNews($news_id, $fileName);
+
+            if($success)
+            {
+                echo json_encode(1);
+            }
+            else
+            {
+                echo json_encode(0);
+
+            }
+        }
     }
 
     public function materials(){
@@ -616,6 +705,8 @@
                         'slug_title' => slug($clean['title']),
                         'user_id' => $this->current_user->user_id,
                     );
+
+                    $removeImage = $this->blog->removeImage($post_id, $blogpost->pic);
 
                     $success = $blogpost->update($value, $post_id);
 

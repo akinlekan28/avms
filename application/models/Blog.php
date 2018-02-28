@@ -131,6 +131,11 @@ class Blog extends MY_Model{
      $this->db->delete('blog');
  }
 
+ public function removeImage($post_id, $fileName){
+    $this->db->where('post_id', $post_id);
+    unlink($fileName);
+  }
+
 }
 
 ?>
