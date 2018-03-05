@@ -43,7 +43,7 @@
 					</li>
 
           <li class="nav-item dropdown">
-						<a class="nav-link" href="contact.html">
+						<a class="nav-link" href="<?php echo base_url();?>home/blog">
 							Blog
 						</a>
 					</li>

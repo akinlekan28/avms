@@ -251,7 +251,7 @@
         $values = array(
           'due_name' => $clean['due_name'],
           'price' => number_format($clean['price'] , 0 , '.' , ','),
-          'date_added' => date("d-m-y H:m:s"),
+          'date_added' => date("Y-m-d H:m:s"),
           'user_id' => $this->current_user->user_id,
         );
 

@@ -30,15 +30,37 @@ class Home extends MY_Controller{
 
   public function study_materials(){
 
-        $config['base_url'] = site_url('home/study_materials');
-        $config['total_rows'] = $this->db->count_all('material');
-        $config['per_page'] = 9;
-        $config['attributes'] = array('class' => 'pagination-links');
+        // $config['base_url'] = site_url('home/study_materials');
+        // $config['total_rows'] = $this->db->count_all('material');
+        // $config['per_page'] = 9;
+        // $config['attributes'] = array('class' => 'pagination-links');
 
-        $this->pagination->initialize($config);
+        // $this->pagination->initialize($config);
 
-    $data['materials'] = $this->material->allMaterials($config['per_page'], $this->uri->segment(3));
+    $data['materials'] = $this->material->allMaterials();
     $this->siteview->_output(['site/materials'], $data);
+  }
+
+  public function download($id){
+        if(!empty($id)){
+            //load download helper
+            $this->load->helper('download');
+            
+            //get file info from database
+            $fileInfo = $this->material->allMaterials(array('material_id' => $id));
+            
+            //file path
+            $file = 'uploads/material/'.$fileInfo['material'];
+            
+            //download file from directory
+            force_download($file, NULL);
+        }
+  }
+
+  public function blog(){
+
+    $data = [];
+    $this->siteview->_output(['site/blog'], $data);
   }
 }
 

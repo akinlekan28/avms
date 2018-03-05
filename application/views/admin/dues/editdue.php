@@ -36,7 +36,7 @@
             </div>
 
             <div class="form-group">
-               <input type="text" class="form-control" value="<?php echo $due->price?>" name="price">
+               <input type="text" class="form-control" placeholder="Enter price" name="price">
               <p><?php echo form_error('price')?></p>
             </div>
 

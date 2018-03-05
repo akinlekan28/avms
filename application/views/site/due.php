@@ -8,7 +8,7 @@
 
   @media screen and (min-width: 760px){
     .mar-fix{
-    margin-top: -270px !important;
+    margin-top: -230px !important;
   }
   }
 </style>

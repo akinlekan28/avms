@@ -73,10 +73,30 @@ class Material extends MY_Model{
         $this->db->delete('material');
     }
 
-    public function allMaterials($limit, $offset){
-        $this->db->order_by('material_id','desc');
-        $result = $this->db->get('material', $limit, $offset);
-        return $result->row();
+    public function allMaterials($params = array()){
+
+        $this->db->select('*');
+        $this->db->from('material');
+        $this->db->where('is_delete','0');
+        $this->db->order_by('date_added','desc');
+        if(array_key_exists('material_id',$params) && !empty($params['material_id'])){
+            $this->db->where('material_id',$params['material_id']);
+            //get records
+            $query = $this->db->get();
+            $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+        }else{
+            //set start and limit
+            if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                $this->db->limit($params['limit'],$params['start']);
+            }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                $this->db->limit($params['limit']);
+            }
+            //get records
+            $query = $this->db->get();
+            $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+        }
+        //return fetched data
+        return $result;
     }
 
 }

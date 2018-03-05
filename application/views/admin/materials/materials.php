@@ -45,7 +45,6 @@
 
             <div class="form-group">
                <input type="file" class="form-control" placeholder="Material" name="material">
-              <p><?php echo form_error('material')?></p>
             </div>
             <div class="text-center">
               <input type="submit" value="Upload" class="btn btn-primary" name="upload">
