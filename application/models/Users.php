@@ -144,4 +144,18 @@ class Users extends MY_Model
         $result = $this->db->get('users');
         return $result->row();
     }
+
+    public function firstname(){
+        $this->db->select('firstname');
+        $this->db->where('is_delete', 0);
+        $result = $this->db->get('users');
+        return $result->result_array();
+    }
+
+    public function dateJoined(){
+        $this->db->select('date_registered');
+        $this->db->where('is_delete', 0);
+        $result = $this->db->get('users');
+        return $result->result_array();
+    }
 }

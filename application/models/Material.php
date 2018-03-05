@@ -73,6 +73,12 @@ class Material extends MY_Model{
         $this->db->delete('material');
     }
 
+    public function allMaterials($limit, $offset){
+        $this->db->order_by('material_id','desc');
+        $result = $this->db->get('material', $limit, $offset);
+        return $result->row();
+    }
+
 }
 
 ?>

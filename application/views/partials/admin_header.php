@@ -51,6 +51,11 @@
 						</li>
 					</ul>
 				</div>
+
+				<div class="navbar-btn navbar-btn-right">
+					<a class="btn btn-success update-pro" href="<?php echo base_url();?>" title="Upgrade to Pro" target="_blank"><i class="fa fa-rocket"></i> <span>Goto Homepage</span></a>
+				</div>
+
 			</div>
 		</nav>
     <!-- END NAVBAR -->

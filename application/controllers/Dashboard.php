@@ -11,14 +11,23 @@
           'category',
           'blog',
           'comment',
-          'news'
+          'news',
+          'siteviews'
         ));
         $this->_secure();
     }
 
     public function index(){
 
-      $this->adminview->_output('admin/dashboard');
+        $data['drafts'] = $this->blog->count(array('is_delete' => 0, 'draft_status' => 1));
+        $data['news'] = $this->news->count(array('is_delete' => 0));
+        $data['categories'] = $this->category->count(array('is_delete' => 0));
+        $data['posts'] = $this->blog->count(array('is_delete' => 0, 'draft_status' => 0));
+        $data['comments'] = $this->comment->count('', array('is_delete' => 0));
+        $data['materials'] = $this->material->count('', array('is_delete' => 0));
+        $data['siteviews'] = $this->siteviews->getAll('', array('page_id' => 1));
+
+      $this->adminview->_output('admin/dashboard', $data);
     }
 
     public function addnews(){
@@ -242,7 +251,7 @@
         $values = array(
           'due_name' => $clean['due_name'],
           'price' => number_format($clean['price'] , 0 , '.' , ','),
-          'date_added' => date("Y-m-d H:m:s"),
+          'date_added' => date("d-m-y H:m:s"),
           'user_id' => $this->current_user->user_id,
         );
 
@@ -815,6 +824,16 @@
 
             }
         }
+    }
+
+    public function firstname(){
+        $users = $this->users->firstname();
+        echo json_encode($users);
+    }
+
+    public function dateJoined(){
+        $users = $this->users->dateJoined();
+        echo json_encode($users);
     }
 
 }

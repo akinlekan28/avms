@@ -85,6 +85,13 @@ class Installer extends MY_Controller
         $this->dbforge->add_key('privilege_id', TRUE);
         $this->dbforge->create_table('privileges', TRUE);
 
+        
+        //Add Site Views Table
+        $this->load->model('Siteviews');
+        $this->dbforge->add_field($this->Siteviews->columns);
+        $this->dbforge->add_key('page_id', TRUE);
+        $this->dbforge->create_table('siteviews', TRUE);
+
         //Add  Tokens
         $this->load->model('Tokens');
         $this->dbforge->add_field($this->Tokens->columns);
@@ -93,6 +100,8 @@ class Installer extends MY_Controller
 
 
         $this->_createPrivileges();
+
+        $this->_createSiteviews();
 
         echo 'Installed Successfully';
     }
@@ -117,6 +126,31 @@ class Installer extends MY_Controller
             elseif(!$privilege->privilege_id)
             {
                 $privilege->insert($p);
+            }
+
+        }
+
+    }
+
+    protected function _createSiteviews()
+    {
+        $this->load->model('siteviews');
+
+        $siteviews = array(
+          array('page_count' => 0)
+        );
+
+        foreach($siteviews as $s)
+        {
+            $siteview = $this->siteviews->getOne('', array('page_count' => $s['page_count']));
+
+            if($siteview->page_id)
+            {
+                $this->siteviews->update($s , $siteview->page_id);
+            }
+            elseif(!$siteview->page_id)
+            {
+                $siteview->insert($s);
             }
 
         }
